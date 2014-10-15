@@ -1,0 +1,32 @@
+{
+  "name": "specs",
+  "version": "0.0.0",
+  "description": "specs demo",
+  "main": "Perf.js",
+  "scripts": {
+    "bundle": "browserify -r react -t reactify Perf.js > bundle.js",
+    "watch": "watchify -r react -t reactify Perf.js -o bundle.js --verbose",
+    "test": "mocha *-spec.js"
+  },
+  "keywords": [
+    "react",
+    "immutability"
+  ],
+  "author": "clint ayres",
+  "license": "MIT",
+  "dependencies": {
+    "benchmark": "^1.0.0",
+    "browserify": "^5.11.1",
+    "immutable": "^2.3.2",
+    "reactify": "^0.14.0",
+    "react": "^0.11.1",
+    "react-immutable-render-mixin": "^0.5.2",
+    "react-raf-batching": "git://github.com/charlieschwabacher/react-raf-batching",
+    "watchify": "^1.0.2"
+  },
+  "devDependencies": {
+    "chai": "^1.9.2",
+    "mocha": "^1.21.5",
+    "sinon": "^1.10.3"
+  }
+}

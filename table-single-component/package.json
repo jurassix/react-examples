@@ -1,0 +1,26 @@
+{
+  "name": "table-single-component",
+  "version": "0.0.0",
+  "description": "demo showing simplest form of component",
+  "main": "App.js",
+  "scripts": {
+    "bundle": "browserify -r react -t reactify App.js > bundle.js",
+    "watch": "watchify -r react -t reactify App.js -o bundle.js --verbose"
+  },
+  "keywords": [
+    "react",
+    "immutability"
+  ],
+  "author": "clint ayres",
+  "license": "MIT",
+  "dependencies": {
+    "benchmark": "^1.0.0",
+    "browserify": "^5.11.1",
+    "immutable": "^2.3.2",
+    "reactify": "^0.14.0",
+    "react-immutable-render-mixin": "^0.5.2",
+    "react": "^0.11.1",
+    "react-raf-batching": "git://github.com/charlieschwabacher/react-raf-batching",
+    "watchify": "^1.0.2"
+  }
+}
