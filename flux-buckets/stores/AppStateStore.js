@@ -26,8 +26,7 @@ AppStateStore = merge(EventEmitter.prototype, {
     return this.addNumClicks(-1);
   },
   addNumClicks: function(ammount) {
-    var currentValue;
-    currentValue = _state.get('numClicks');
+    var currentValue = _state.get('numClicks');
     return this.setAppState(_state.set('numClicks', currentValue + ammount));
   },
   getAppState: function() {

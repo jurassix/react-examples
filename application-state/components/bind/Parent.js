@@ -8,7 +8,7 @@ Child = require('./Child');
 
 Parent = React.createClass({
   displayName: 'Parent',
-  getInitialState: function() {
+  getDefaultProps: function() {
     return {
       header: ''
     };
@@ -23,7 +23,7 @@ Parent = React.createClass({
   },
   updateHeader: function(event) {
     var newHeader = event.currentTarget.value;
-    this.setState({
+    this.setProps({
       header: newHeader
     });
   }
