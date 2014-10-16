@@ -13,14 +13,11 @@ isNotEqual = function(a, b) {
 };
 
 describe('immutable app state', function() {
-  it('has basic immutable pricipals', function() {
+  it('has basic immutable principals', function() {
     var x, y, z;
     x = Immutable.fromJS([
-      {
-        value: 1
-      }, {
-        value: 3
-      }
+      { value: 1 },
+      { value: 3 }
     ]);
 
     y = x.unshift({
@@ -66,35 +63,9 @@ describe('immutable app state', function() {
   });
   it('has shared structure', function() {
     var i_x, i_y, i_z, x, y, z;
-    x = [
-      {
-        value: 1
-      }, {
-        value: 3
-      }
-    ];
-
-    y = [
-      {
-        value: 0
-      }, {
-        value: 1
-      }, {
-        value: 3
-      }
-    ];
-
-    z = [
-      {
-        value: 1
-      }, {
-        value: 0
-      }, {
-        value: 1
-      }, {
-        value: 3
-      }
-    ];
+    x =                         [{value: 1}, {value: 3}];
+    y =             [{value: 0}, {value: 1}, {value: 3}];
+    z = [{value: 1}, {value: 0}, {value: 1}, {value: 3}];
 
     i_x = Immutable.fromJS(x);
     i_y = Immutable.fromJS(y);
@@ -105,34 +76,15 @@ describe('immutable app state', function() {
     isEqual(i_x.first(), i_y.get(1));
     isEqual(i_x.first(), i_z.get(2));
   });
-  return it('can replace json and maintain ref integrity', function() {
+  it('can replace json and maintain ref integrity', function() {
     var i_initial, i_update, initial, update;
     initial = {
-      rows: [
-        {
-          cells: [1, 2, 3, 4, 5]
-        }, {
-          cells: [1, 2, 3, 4, 5]
-        }, {
-          cells: [1, 2, 3, 4, 5]
-        }, {
-          cells: [1, 2, 3, 4, 5]
-        }
-      ]
+      rows: [{cells: [1, 2, 3, 4, 5]}, {cells: [1, 2, 3, 4, 5]},
+             {cells: [1, 2, 3, 4, 5]}, {cells: [1, 2, 3, 4, 5]}]
     };
-
     update = {
-      rows: [
-        {
-          cells: [5, 4, 3, 2, 1]
-        }, {
-          cells: [1, 2, 3, 4, 5]
-        }, {
-          cells: [1, 2, 3, 4, 5]
-        }, {
-          cells: [1, 2, 3, 4, 5]
-        }
-      ]
+      rows: [{cells: [5, 4, 3, 2, 1]}, {cells: [1, 2, 3, 4, 5]},
+             {cells: [1, 2, 3, 4, 5]}, {cells: [1, 2, 3, 4, 5]}]
     };
 
     i_initial = Immutable.fromJS(initial);

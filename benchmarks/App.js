@@ -39,8 +39,6 @@ getRandomInt = function(max, min) {
 
 data = {};
 
-callback = function() {};
-
 suite = new Benchmark.Suite;
 
 suite.add('Single Table', {

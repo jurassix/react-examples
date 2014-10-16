@@ -7,15 +7,15 @@ sinon = require('sinon');
 Immutable = require('immutable');
 
 isEqual = function(a, b) {
-  return expect(Immutable.is(a, b)).to.be["true"];
+  return expect(Immutable.is(a, b)).to.be("true");
 };
 
 isNotEqual = function(a, b) {
-  return expect(Immutable.is(a, b)).to.be["false"];
+  return expect(Immutable.is(a, b)).to.be("false");
 };
 
 describe('cursor', function() {
-  it('is equal to original data', function() {
+  it('is equal to original immutable data', function() {
     var cursor, foo, i_foo;
     foo = {
       pie: 'apple',
@@ -91,7 +91,7 @@ describe('cursor', function() {
     };
 
     onTransaction = function(newData, oldData) {
-      return cursor = newData.cursor();
+      return cursor = newData.cursor(onTransaction);
     };
 
     spy = sinon.spy(onTransaction);
@@ -100,9 +100,8 @@ describe('cursor', function() {
     cursor = i_foo.cursor(spy);
 
     cursor.update(function(data) {
-      var newdata;
-      newdata = data.set('pie', 'raspberry');
-      return newdata.set('portion', 'small');
+      var updatedData = data.set('pie', 'raspberry');
+      return updatedData.set('portion', 'small');
     });
 
     isNotEqual(i_foo, cursor);
@@ -110,8 +109,8 @@ describe('cursor', function() {
     isEqual(cursor.get('pie'), 'raspberry');
     isEqual(cursor.get('portion'), 'small');
   });
-  return it('can create sub-cursor and listen to transacitons from main cursor', function() {
-    var cursor, foo, i_foo, onTransaction, subCursor;
+  it('can create sub-cursor and listen to transacitons from main cursor', function() {
+    var mainCursor, foo, i_foo, onTransaction, subCursor;
     foo = {
       pie: 'apple',
       portion: 'large'
@@ -122,14 +121,14 @@ describe('cursor', function() {
     };
 
     i_foo = Immutable.fromJS(foo);
-    cursor = i_foo.cursor(onTransaction);
-    subCursor = cursor.cursor('pie');
+    mainCursor = i_foo.cursor(onTransaction);
+    subCursor = mainCursor.cursor('pie');
 
     subCursor.update(function() {
       return 'raspberry';
     });
 
-    isNotEqual(i_foo, cursor);
-    isEqual(cursor.get('pie'), 'raspberry');
+    isNotEqual(i_foo, mainCursor);
+    isEqual(mainCursor.get('pie'), 'raspberry');
   });
 });

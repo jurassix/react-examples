@@ -22,8 +22,7 @@ Parent = React.createClass({
     );
   },
   updateHeader: function(event) {
-    var newHeader;
-    newHeader = event.currentTarget.value;
+    var newHeader = event.currentTarget.value;
     this.setState({
       header: newHeader
     });

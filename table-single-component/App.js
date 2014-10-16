@@ -36,8 +36,12 @@ suite = new Benchmark.Suite;
 suite.add('Table singe component', {
   'defer': true,
   'fn': function(deferred) {
-    data.rows[getRandomInt(numRows)].cells[getRandomInt(numColls)] += .001;
-    React.renderComponent(Table(data), document.querySelector('#app'), function() {
+    var row = getRandomInt(numRows),
+        col = getRandomInt(numColls);
+    data.rows[row].cells[col] += .001;
+    React.renderComponent(Table(data),
+      document.querySelector('#app'),
+      function() {
       return deferred.resolve();
     });
   }
