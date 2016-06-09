@@ -29,7 +29,7 @@ var getRandomInt = function(max, min) {
 
 var suite = new Benchmark.Suite;
 
-suite.add('Table multiple immutable components', {
+suite.add('PureRenderMixin: Table multiple immutable components', {
   'defer': true,
   'fn': function(deferred) {
     data = data.updateIn(['rows', getRandomInt(numRows), 'cells'], function(cells) {
@@ -39,7 +39,27 @@ suite.add('Table multiple immutable components', {
     });
     ReactDOM.render(
       React.createElement(
-        Table,
+        Table.PureTable,
+        {
+          rows: data.get('rows'),
+        }
+      )
+    , document.querySelector('#app')
+    , function() {
+      return deferred.resolve();
+    });
+  }
+}).add('ImmutableRenderMixin: Table multiple immutable components', {
+  'defer': true,
+  'fn': function(deferred) {
+    data = data.updateIn(['rows', getRandomInt(numRows), 'cells'], function(cells) {
+      var index;
+      index = getRandomInt(numColls);
+      return cells.set(index, cells.get(index) + .001);
+    });
+    ReactDOM.render(
+      React.createElement(
+        Table.ImmutableTable,
         {
           rows: data.get('rows'),
         }
@@ -67,78 +87,96 @@ function Cell(props) {
   );
 }
 
-module.exports = Pure(Cell);
+module.exports = {
+  PureCell: Pure.PureRender(Cell),
+  ImmutableCell: Pure.ImmutableRender(Cell),
+};
 
 },{"./Pure":3,"react":182}],3:[function(require,module,exports){
 var React = require('react');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
-var ImmutableRenderMixin = require('react-immutable-render-mixin').default;
+var ImmutableRenderMixin = require('react-immutable-render-mixin');
 
-function Pure(component) {
-  return React.createClass({
-    mixins: [ImmutableRenderMixin],
+function makePure(Mixin) {
+  return function Pure(component) {
+    return React.createClass({
+      mixins: [Mixin],
 
-    render: function() {
-      return component(this.props);
-    }
-  });
+      render: function() {
+        return component(this.props);
+      }
+    });
+  }
 }
 
-module.exports = Pure;
+module.exports = {
+  PureRender: makePure(PureRenderMixin),
+  ImmutableRender: makePure(ImmutableRenderMixin),
+};
 
 },{"react":182,"react-addons-pure-render-mixin":9,"react-immutable-render-mixin":13}],4:[function(require,module,exports){
 var React = require('react');
 var Cell = require('./Cell');
 var Pure = require('./Pure');
 
-function createCell(cell, index) {
-  return React.createElement(
-    Cell,
-    {
-      cell: cell,
-      key: 'cell-' + index,
-    }
-  );
+function makeRow(CellType) {
+  function createCell(cell, index) {
+    return React.createElement(
+      CellType,
+      {
+        cell: cell,
+        key: 'cell-' + index,
+      }
+    );
+  }
+
+  return function Row(props) {
+    return React.createElement(
+      'tr',
+      null,
+      props.cells.map(createCell)
+    );
+  }
 }
 
-function Row(props) {
-  return React.createElement(
-    'tr',
-    null,
-    props.cells.map(createCell)
-  );
-}
-
-module.exports = Pure(Row);
+module.exports = {
+  PureRow: Pure.PureRender(makeRow(Cell.PureCell)),
+  ImmutableRow: Pure.ImmutableRender(makeRow(Cell.ImmutableCell)),
+};
 
 },{"./Cell":2,"./Pure":3,"react":182}],5:[function(require,module,exports){
 var React = require('react');
 var Row = require('./Row');
 var Pure = require('./Pure');
 
-function createRow(row, index) {
-  return React.createElement(
-    Row,
-    {
-      cells: row.get('cells'),
-      key: 'row-' + index,
-    }
-  );
-}
+function makeTable(RowType) {
+  function createRow(row, index) {
+    return React.createElement(
+      RowType,
+      {
+        cells: row.get('cells'),
+        key: 'row-' + index,
+      }
+    );
+  }
 
-function Table(props) {
-  return React.createElement(
-    'table',
-    null,
-    React.createElement(
-      'tbody',
+  return function Table(props) {
+    return React.createElement(
+      'table',
       null,
-      props.rows.map(createRow)
-    )
-  );
+      React.createElement(
+        'tbody',
+        null,
+        props.rows.map(createRow)
+      )
+    );
+  }
 }
 
-module.exports = Pure(Table);
+module.exports = {
+  PureTable: Pure.PureRender(makeTable(Row.PureRow)),
+  ImmutableTable: Pure.ImmutableRender(makeTable(Row.ImmutableRow)),
+};
 
 },{"./Pure":3,"./Row":4,"react":182}],6:[function(require,module,exports){
 (function (process,global){

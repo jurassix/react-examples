@@ -28,7 +28,7 @@ var getRandomInt = function(max, min) {
 
 var suite = new Benchmark.Suite;
 
-suite.add('Table multiple immutable components', {
+suite.add('PureRenderMixin: Table multiple immutable components', {
   'defer': true,
   'fn': function(deferred) {
     data = data.updateIn(['rows', getRandomInt(numRows), 'cells'], function(cells) {
@@ -38,7 +38,27 @@ suite.add('Table multiple immutable components', {
     });
     ReactDOM.render(
       React.createElement(
-        Table,
+        Table.PureTable,
+        {
+          rows: data.get('rows'),
+        }
+      )
+    , document.querySelector('#app')
+    , function() {
+      return deferred.resolve();
+    });
+  }
+}).add('ImmutableRenderMixin: Table multiple immutable components', {
+  'defer': true,
+  'fn': function(deferred) {
+    data = data.updateIn(['rows', getRandomInt(numRows), 'cells'], function(cells) {
+      var index;
+      index = getRandomInt(numColls);
+      return cells.set(index, cells.get(index) + .001);
+    });
+    ReactDOM.render(
+      React.createElement(
+        Table.ImmutableTable,
         {
           rows: data.get('rows'),
         }
