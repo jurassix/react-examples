@@ -4,8 +4,8 @@
   "description": "demo showing advatages of immutability",
   "main": "App.js",
   "scripts": {
-    "bundle": "browserify -r react -t reactify App.js > bundle.js",
-    "watch": "watchify -r react -t reactify App.js -o bundle.js --verbose"
+    "bundle": "browserify App.js > bundle.js",
+    "watch": "watchify App.js -o bundle.js --verbose"
   },
   "keywords": [
     "react",

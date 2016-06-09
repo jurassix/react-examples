@@ -1,18 +1,12 @@
-var Benchmark, Immutable, Table, data, getRandomInt, numColls, numRows, suite;
+var React = require('react');
+var Immutable = require('immutable');
+var Benchmark = require('benchmark');
+var Table = require('./components/Table');
 
-require('react-raf-batching').inject();
+var numRows = 100;
+var numColls = 100;
 
-Immutable = require('immutable');
-
-Benchmark = require('benchmark').Benchmark;
-
-Table = require('./components/Table');
-
-numRows = 100;
-
-numColls = 100;
-
-data = Immutable.fromJS({
+var data = Immutable.fromJS({
   rows: Immutable.Range(1, Infinity).take(numRows).reduce(function(row) {
     row.push({
       cells: Immutable.Range(100, Infinity).take(numColls).reduce(function(cell, n) {
@@ -24,14 +18,14 @@ data = Immutable.fromJS({
   }, [])
 });
 
-getRandomInt = function(max, min) {
+var getRandomInt = function(max, min) {
   if (min == null) {
     min = 0;
   }
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-suite = new Benchmark.Suite;
+var suite = new Benchmark.Suite;
 
 suite.add('Table multiple immutable components', {
   'defer': true,
@@ -41,9 +35,15 @@ suite.add('Table multiple immutable components', {
       index = getRandomInt(numColls);
       return cells.set(index, cells.get(index) + .001);
     });
-    React.renderComponent(Table({
-      rows: data.get('rows')
-    }), document.querySelector('#app'), function() {
+    React.renderComponent(
+      React.createElement(
+        Table,
+        {
+          rows: data.get('rows'),
+        }
+      )
+    , document.querySelector('#app')
+    , function() {
       return deferred.resolve();
     });
   }
