@@ -1,39 +1,24 @@
-/**
- * @jsx React.DOM
- */
+var React = require('react');
+var Immutable = require('immutable');
+var Cell = require('./Cell');
+var Pure = require('./Pure');
 
-var Cell, Immutable, ImmutableRenderMixin, Row;
-
-Immutable = require('immutable');
-
-ImmutableRenderMixin = require('react-immutable-render-mixin');
-
-Cell = require('./Cell');
-
-Row = React.createClass({
-  mixins: [ImmutableRenderMixin],
-  propTypes: {
-    cells: function(value) {
-      return value instanceof Immutable.Vector;
+function createCell(cell, index) {
+  return React.createElement(
+    Cell,
+    {
+      cell: cell,
+      key: 'cell-' + index,
     }
-  },
-  getDefaultProps: function() {
-    return {
-      cells: Immutable.Vector()
-    };
-  },
-  render: function() {
-    return (
-      <tr>
-        {this.props.cells.map(this.renderCell).toArray()}
-      </tr>
-    );
-  },
-  renderCell: function(cell, index) {
-    return (
-      <Cell cell={cell} key={'cell-'+index} />
-    );
-  }
-});
+  );
+}
 
-module.exports = Row;
+function Row(props) {
+  return React.createElement(
+    'tr',
+    null,
+    props.cells.map(createCell)
+  );
+}
+
+module.exports = Pure(Row);

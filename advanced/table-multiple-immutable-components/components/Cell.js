@@ -1,31 +1,13 @@
-/**
- * @jsx React.DOM
- */
+var React = require('react');
+var Immutable = require('immutable');
+var Pure = require('./Pure');
 
-var Cell, Immutable, ImmutableRenderMixin;
+function Cell(props) {
+  return React.createElement(
+    'td',
+    null,
+    props.cell
+  );
+}
 
-Immutable = require('immutable');
-
-ImmutableRenderMixin = require('react-immutable-render-mixin');
-
-Cell = React.createClass({
-  mixins: [ImmutableRenderMixin],
-  propTypes: {
-    cell: React.PropTypes.number
-  },
-  getDefaultProps: function() {
-    return {
-      cell: 0
-    };
-  },
-  render: function() {
-    return (
-      <td>
-        {this.props.cell}
-      </td>
-    );
-  }
-});
-
-module.exports = Cell;
-
+module.exports = Pure(Cell);
