@@ -10,4 +10,7 @@ function Cell(props) {
   );
 }
 
-module.exports = Pure(Cell);
+module.exports = {
+  PureCell: Pure.PureRender(Cell),
+  ImmutableCell: Pure.ImmutableRender(Cell),
+};

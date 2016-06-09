@@ -1,14 +1,20 @@
 var React = require('react/addons');
+var PureRenderMixin = React.addons.PureRenderMixin;
 var ImmutableRenderMixin = require('react-immutable-render-mixin');
 
-function Pure(component) {
-  return React.createClass({
-    mixins: [ImmutableRenderMixin],
+function makePure(Mixin) {
+  return function Pure(component) {
+    return React.createClass({
+      mixins: [Mixin],
 
-    render: function() {
-      return component(this.props);
-    }
-  });
+      render: function() {
+        return component(this.props);
+      }
+    });
+  }
 }
 
-module.exports = Pure;
+module.exports = {
+  PureRender: makePure(PureRenderMixin),
+  ImmutableRender: makePure(ImmutableRenderMixin),
+};
