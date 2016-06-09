@@ -1,5 +1,4 @@
 var React = require('react');
-var Immutable = require('immutable');
 var Row = require('./Row');
 var Pure = require('./Pure');
 
@@ -17,7 +16,11 @@ function Table(props) {
   return React.createElement(
     'table',
     null,
-    props.rows.map(createRow)
+    React.createElement(
+      'tbody',
+      null,
+      props.rows.map(createRow)
+    )
   );
 }
 

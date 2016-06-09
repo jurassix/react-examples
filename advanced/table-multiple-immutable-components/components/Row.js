@@ -1,5 +1,4 @@
 var React = require('react');
-var Immutable = require('immutable');
 var Cell = require('./Cell');
 var Pure = require('./Pure');
 
