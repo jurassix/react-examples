@@ -4,6 +4,7 @@
   "description": "demo showing advatages of immutability",
   "main": "App.js",
   "scripts": {
+    "clean": "rimraf bundle.js",
     "build": "browserify App.js > bundle.js",
     "watch": "watchify App.js -o bundle.js --verbose"
   },
@@ -16,11 +17,12 @@
   "dependencies": {
     "benchmark": "^1.0.0",
     "browserify": "^13.0.1",
-    "immutable": "^3.8.1",
+    "immutable": "^2.3.2",
     "react": "^15.1.0",
     "react-addons-pure-render-mixin": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-immutable-render-mixin": "^0.9.6",
+    "rimraf": "^2.5.2",
     "watchify": "^3.7.0"
   }
 }
