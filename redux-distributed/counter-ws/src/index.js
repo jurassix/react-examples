@@ -46,15 +46,18 @@ render(
   , document.getElementById('root')
 );
 
+
+
 const peer = createPeer('one');
 const peerTwo = createPeer('two');
 
+/*
 registerOpen(peer, (id) => {
   console.log('@@open', id);
-  connectToPeer(peerTwo, peer.id, (data) => console.log('@@DATA', JSON.stringify(data)));
+  connectToPeer(peerTwo, peer.id, (data) => console.log('@@DATA', data));
 });
 // registerError(peer, (err) => console.error('@@error', err));
-registerConnect(peer, (data) => console.log('@@data', JSON.stringify(data)));
+registerConnect(peer, (data) => console.log('@@data', data));
 
 // registerOpen(peerTwo, (id) => console.log('@@open2', id));
 // registerError(peerTwo, (err) => console.error('@@error2', err));
@@ -64,3 +67,9 @@ registerConnect(peer, (data) => console.log('@@data', JSON.stringify(data)));
 
 setTimeout(() => send(peer)({message: 'hello world'}), 5000);
 setTimeout(() => send(peerTwo)({message: 'hello world'}), 5000);
+*/
+
+connectToPeer(peer, peerTwo);
+
+setTimeout(() => send(peer)({message: 'p1 hello world'}), 2000);
+setTimeout(() => send(peerTwo)({message: 'p2 hello world'}), 4000);
