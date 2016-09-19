@@ -1,11 +1,12 @@
 import Peer from 'peerjs';
 
-export const createPeer = () => {
+export const createPeer = (options) => {
   return new Peer({
     debug: 3,
     host: 'localhost',
     port: 9000,
     path: '/',
+    ...options,
   });
 }
 
@@ -52,19 +53,19 @@ function data(peer, onData = () => {}) {
   });
 }
 
-export async function connectToPeer(peer, peerTwo) {
+export async function connectToPeer(peer, remotePeerId, onMessageRecieve) {
   try {
     await open(peer);
     connection(peer).then((conn) => {
-      data(conn);
+      data(conn, onMessageRecieve);
     });
 
-    const peerConn = peer.connect(peerTwo.id, {serialization: 'json'});
+    const peerConn = peer.connect(remotePeerId, {serialization: 'json'});
     await open(peerConn);
     connection(peerConn).then((conn) => {
-      data(conn);
+      data(conn, onMessageRecieve);
     });
   } catch(err) {
-    console.error('Caught Exception', err);
+    console.error('Client connection failed', err);
   }
 }

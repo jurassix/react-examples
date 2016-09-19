@@ -43,8 +43,6 @@ render(
   , document.getElementById('root')
 );
 
-
-
 const peer = createPeer('one');
 const peerTwo = createPeer('two');
 
