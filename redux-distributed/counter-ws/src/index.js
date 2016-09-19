@@ -4,11 +4,8 @@ import {Provider, connect} from 'react-redux';
 import {createStore} from 'redux';
 import './index.css';
 import {
-  createPeer,
-  registerOpen,
-  registerError,
-  registerConnect,
   connectToPeer,
+  createPeer,
   send,
 } from './createPeer';
 
@@ -51,25 +48,8 @@ render(
 const peer = createPeer('one');
 const peerTwo = createPeer('two');
 
-/*
-registerOpen(peer, (id) => {
-  console.log('@@open', id);
-  connectToPeer(peerTwo, peer.id, (data) => console.log('@@DATA', data));
-});
-// registerError(peer, (err) => console.error('@@error', err));
-registerConnect(peer, (data) => console.log('@@data', data));
-
-// registerOpen(peerTwo, (id) => console.log('@@open2', id));
-// registerError(peerTwo, (err) => console.error('@@error2', err));
-// registerConnect(peerTwo, (data) => console.log('@@data2', data));
-
-// connectToPeer(peer, peerTwo.id, (data) => console.log('@@DATA', data));
-
-setTimeout(() => send(peer)({message: 'hello world'}), 5000);
-setTimeout(() => send(peerTwo)({message: 'hello world'}), 5000);
-*/
-
 connectToPeer(peer, peerTwo);
+connectToPeer(peerTwo, peer);
 
 setTimeout(() => send(peer)({message: 'p1 hello world'}), 2000);
 setTimeout(() => send(peerTwo)({message: 'p2 hello world'}), 4000);
