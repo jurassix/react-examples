@@ -55,16 +55,23 @@ function data(peer, onData = () => {}) {
 
 export async function connectToPeer(peer, remotePeerId, onMessageRecieve) {
   try {
+    console.log('here 0')
     await open(peer);
+    console.log('here 1')
     connection(peer).then((conn) => {
+      console.log('here data')
       data(conn, onMessageRecieve);
     });
 
     const peerConn = peer.connect(remotePeerId, {serialization: 'json'});
-    await open(peerConn);
+    console.log('here 2')
+    await open(peerConn)
+    console.log('here 3');
     connection(peerConn).then((conn) => {
+      console.log('here data 2')
       data(conn, onMessageRecieve);
     });
+    console.log('here done')
   } catch(err) {
     console.error('Client connection failed', err);
   }
