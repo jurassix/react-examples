@@ -1,6 +1,6 @@
 import Peer from 'peerjs';
 
-export const createPeer = (options) => {
+export const createPeer = (options, onOpen) => {
   return new Peer({
     debug: 3,
     host: 'localhost',
@@ -20,59 +20,80 @@ export const send = (peer) => (data) => {
     });
 }
 
-function open(peer) {
+function open(peer, onOpen, onError) {
   return new Promise((resolve, reject) => {
-    peer.on('open', (id) => {
-      console.log('Open is successful', id);
-      resolve(id);
-    });
-    peer.on('error', (err) => {
-      console.log('Open failed', err);
+    try {
+      if (peer.open) {
+        resolve(peer.id);
+      }
+      peer.on('open', (id) => {
+        console.log('Open is successful', id);
+        onOpen(id);
+        resolve(id);
+      });
+      peer.on('error', (err) => {
+        console.log('Open failed', err);
+        onError(err);
+        reject(err);
+      })
+    } catch (err) {
+      onError(err);
       reject(err);
-    })
+    }
   });
 }
 
-function connection(peer) {
+function connection(peer, onConnection, onError) {
   return new Promise((resolve, reject) => {
-    peer.on('connection', (conn) => {
-      console.log('Connection is successful', conn);
-      resolve(conn);
-    });
-    peer.on('error', (err) => {
-      console.log('Connection failed', err);
+    try {
+      peer.on('connection', (conn) => {
+        console.log('Connection is successful', conn);
+        onConnection(conn);
+        resolve(conn);
+      });
+      peer.on('error', (err) => {
+        console.log('Connection failed', err);
+        onError(err);
+        reject(err);
+      });
+    } catch (err) {
+      onError(err);
       reject(err);
-    })
+    }
   });
 }
 
-function data(peer, onData = () => {}) {
+function data(peer, onData) {
   peer.on('data', (data) => {
     console.log('Data is recieved', data);
     onData(data);
   });
 }
 
-export async function connectToPeer(peer, remotePeerId, onMessageRecieve) {
+export async function connectToPeer(
+  peer,
+  remotePeerId,
+  onOpen = () => {},
+  onConnection  = () => {},
+  onMessageRecieve = () => {},
+  onError = () => {},
+) {
   try {
-    console.log('here 0')
-    await open(peer);
-    console.log('here 1')
+    await open(peer, onOpen, onError);
     connection(peer).then((conn) => {
-      console.log('here data')
       data(conn, onMessageRecieve);
     });
 
-    const peerConn = peer.connect(remotePeerId, {serialization: 'json'});
-    console.log('here 2')
-    await open(peerConn)
-    console.log('here 3');
-    connection(peerConn).then((conn) => {
-      console.log('here data 2')
-      data(conn, onMessageRecieve);
-    });
-    console.log('here done')
-  } catch(err) {
+    if (peer.connections[remotePeerId] === undefined) {
+      const peerConn = peer.connect(remotePeerId, {serialization: 'json'});
+      await open(peerConn, onOpen, onError);
+      connection(peerConn, onConnection, onError).then((conn) => {
+        data(conn, onMessageRecieve);
+      });
+    } else {
+      console.error(`Already connected to remote peer id = ${remotePeerId}`);
+    }
+  } catch (err) {
     console.error('Client connection failed', err);
   }
 }

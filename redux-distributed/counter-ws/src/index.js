@@ -75,11 +75,11 @@ const actions = {
   initPeer: (peerOptions) => ({type: '@@PEER_INIT', peer: createPeer(peerOptions)}),
   connectToPeer: (remotePeerId) => (dispatch, getState) => {
     const {peer} = getState();
-    dispatch({type: 'PEER_CONNECTING', peer, remotePeerId});
+    dispatch({type: '@@PEER_CONNECTING', peer, remotePeerId});
     connectToPeer(
       peer,
       remotePeerId,
-      (data) => dispatch({type: 'PEER_DATA_RECEIVE', data})
+      (data) => dispatch({type: '@@PEER_DATA_RECEIVE', data})
     );
   },
   sendMessage: (message) => (dispatch, getState) => {
