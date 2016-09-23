@@ -1,5 +1,9 @@
-export const peerMiddleware = store => next => action => {
-  
+
+export const peerMiddleware = store => {
+    const {peer} = store.getState();
+
+    return next => action => next(action);
+  }
 }
 
 

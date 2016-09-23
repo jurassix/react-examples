@@ -1,13 +1,18 @@
 import Peer from 'peerjs';
 
-export const createPeer = (options, onOpen) => {
-  return new Peer({
+const noop = arg => arg;
+
+export const createPeer = (options, onOpen, onConnection) => {
+  const peer = new Peer({
     debug: 3,
     host: 'localhost',
     port: 9000,
     path: '/',
     ...options,
   });
+  open(peer, onOpen);
+  connection(peer, onConnection);
+  return peer;
 }
 
 export const send = (peer) => (data) => {
@@ -20,7 +25,7 @@ export const send = (peer) => (data) => {
     });
 }
 
-function open(peer, onOpen, onError) {
+function open(peer, onOpen = noop, onError = noop) {
   return new Promise((resolve, reject) => {
     try {
       if (peer.open) {
@@ -43,7 +48,7 @@ function open(peer, onOpen, onError) {
   });
 }
 
-function connection(peer, onConnection, onError) {
+function connection(peer, onConnection = noop, onError = noop) {
   return new Promise((resolve, reject) => {
     try {
       peer.on('connection', (conn) => {
@@ -63,7 +68,7 @@ function connection(peer, onConnection, onError) {
   });
 }
 
-function data(peer, onData) {
+function data(peer, onData = noop) {
   peer.on('data', (data) => {
     console.log('Data is recieved', data);
     onData(data);
@@ -73,10 +78,10 @@ function data(peer, onData) {
 export async function connectToPeer(
   peer,
   remotePeerId,
-  onOpen = () => {},
-  onConnection  = () => {},
-  onMessageRecieve = () => {},
-  onError = () => {},
+  onOpen = noop,
+  onConnection  = noop,
+  onMessageRecieve = noop,
+  onError = noop,
 ) {
   try {
     await open(peer, onOpen, onError);
