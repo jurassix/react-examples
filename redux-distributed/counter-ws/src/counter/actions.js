@@ -6,7 +6,11 @@ export const onIncrement = () => (dispatch, getState) => {
   sendMessage(action)(dispatch, getState);
 }
 
-export const onDecrement = () => ({type: 'DECREMENT'});
+export const onDecrement = () => (dispatch, getState) => {
+  const action = {type: 'DECREMENT'};
+  dispatch(action);
+  sendMessage(action)(dispatch, getState);
+}
 
 export const initPeer = (peerOptions) => (dispatch, getState) => dispatch({
   type: '@@PEER_INIT',
