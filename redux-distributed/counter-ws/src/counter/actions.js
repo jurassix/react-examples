@@ -13,7 +13,11 @@ export const initPeer = (peerOptions) => (dispatch, getState) => dispatch({
   peer: createPeer(
     peerOptions,
     (id) => dispatch({type: '@@PEER_OPEN', id}),
-    (conn) => dispatch({type: '@@PEER_CONNECTION', conn})
+    (conn) => dispatch({type: '@@PEER_CONNECTION', conn}),
+    (action) => {
+      dispatch({type: '@@PEER_DATA_RECEIVE', action});
+      dispatch(action);
+    }
   ),
 });
 

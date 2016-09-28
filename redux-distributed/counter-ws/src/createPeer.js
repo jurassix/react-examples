@@ -1,8 +1,8 @@
 import Peer from 'peerjs';
 
-const noop = arg => arg;
+const noop = arg => {console.log(arg); return arg;};
 
-export const createPeer = (options, onOpen, onConnection) => {
+export const createPeer = (options, onOpen, onConnection, onMessageRecieve) => {
   const peer = new Peer({
     debug: 3,
     host: 'localhost',
@@ -11,7 +11,7 @@ export const createPeer = (options, onOpen, onConnection) => {
     ...options,
   });
   open(peer, onOpen);
-  connection(peer, onConnection);
+  connection(peer, onConnection).then((conn) => data(conn, onMessageRecieve));
   return peer;
 }
 
@@ -89,7 +89,9 @@ export async function connectToPeer(
       data(conn, onMessageRecieve);
     });
 
+    console.log('is connected?')
     if (peer.connections[remotePeerId] === undefined) {
+      console.log('NOT connected')
       const peerConn = peer.connect(remotePeerId, {serialization: 'json'});
       await open(peerConn, onOpen, onError);
       connection(peerConn, onConnection, onError).then((conn) => {

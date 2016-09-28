@@ -22,8 +22,12 @@ const reducePeer = (peer, action) => {
     console.log('reduced connection')
     // return {...action.conn};
   }
+  if (action.type === '@@PEER_CONNECTING') {
+    console.log('reduced connecting')
+    // return {...action.conn};
+  }
   if (action.type === '@@PEER_DATA_RECIEVE') {
-    console.log('reduced recieved', action.data);
+    console.log('reduced recieved', action);
   }
   return peer;
 }
