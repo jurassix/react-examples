@@ -21,11 +21,14 @@ const reducePeer = (peer, action) => {
   }
   if (action.type === '@@PEER_CONNECTION') {
     console.log('reduced connection')
-    // return {...action.conn};
+    return peer;
   }
   if (action.type === '@@PEER_CONNECTING') {
     console.log('reduced connecting')
     // return {...action.conn};
+  }
+  if (action.type === '@@PEER_ERROR') {
+    console.log('reduced error', action);
   }
   if (action.type === '@@PEER_DATA_RECIEVE') {
     console.log('reduced recieved', action);
