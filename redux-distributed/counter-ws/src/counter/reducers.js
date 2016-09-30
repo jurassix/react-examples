@@ -1,3 +1,4 @@
+import {send} from '../createPeer';
 
 const reduceValue = (value = 0, action) => {
   if (action.type === 'INCREMENT') {
@@ -28,6 +29,10 @@ const reducePeer = (peer, action) => {
   }
   if (action.type === '@@PEER_DATA_RECIEVE') {
     console.log('reduced recieved', action);
+  }
+  if (action.type === '@@PEER_SEND_MESSAGE') {
+    console.log('reduced send', action);
+    send(peer)(action.message);
   }
   return peer;
 }

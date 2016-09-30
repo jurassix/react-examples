@@ -90,16 +90,16 @@ export async function connectToPeer(
     });
 
     console.log('is connected?')
-    if (peer.connections[remotePeerId] === undefined) {
+    // if (peer.connections[remotePeerId] === undefined) {
       console.log('NOT connected')
       const peerConn = peer.connect(remotePeerId, {serialization: 'json'});
       await open(peerConn, onOpen, onError);
       connection(peerConn, onConnection, onError).then((conn) => {
         data(conn, onMessageRecieve);
       });
-    } else {
-      console.error(`Already connected to remote peer id = ${remotePeerId}`);
-    }
+    // } else {
+      // console.error(`Already connected to remote peer id = ${remotePeerId}`);
+    // }
   } catch (err) {
     console.error('Client connection failed', err);
   }

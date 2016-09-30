@@ -2,8 +2,8 @@ import invariant from 'invariant';
 /**
 middleware(options)(action, state) -> nextAction
 options = {
-  filter: () -> {},
-  enhancer: (state, action) -> nextAction
+  filter: (action) -> true,
+  enhancer: (store, action) -> nextAction
 }
 */
 
@@ -21,14 +21,14 @@ const isSimpleAction = (action) => {
   return true;
 }
 
-export const actionEnhancerMiddleware = options => {
+const actionEnhancerMiddleware = options => {
   let {filter, enhancer} = options;
-  invaiant(
-    typeof filter !== 'function',
+  invariant(
+    typeof filter === 'function',
     'actionEnhancerMiddleware filter option must be a function'
   );
-  invaiant(
-    typeof enhancer !== 'function' || typeof enhancer !== 'undefined',
+  invariant(
+    typeof enhancer === 'function' || typeof enhancer === 'undefined',
     'actionEnhancerMiddleware enhancer option must be a function'
   );
 
@@ -38,9 +38,10 @@ export const actionEnhancerMiddleware = options => {
   return store => next => action => {
     if (isSimpleAction(action) && filter(action)) {
       // enhance action
-      return next(enhancer(store.getState(), action));
+      return next(enhancer(store, action));
     }
     // default case
     return next(action);
   }
 }
+export default actionEnhancerMiddleware;
