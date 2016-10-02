@@ -4,47 +4,31 @@ import {Provider, connect} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import compose from 'lodash/flowRight';
-import PeerContainer from './PeerContainer';
+import PeerContainer from '../peer/PeerContainer';
 import CounterContainer from './CounterContainer';
 import reducers from './reducers';
-import actionEnhancerMiddleware from '../actionEnhancerMiddleware';
+import actionEnhancerMiddleware from '../enhancers/actionEnhancerMiddleware';
+import {peerReducerEnhancer} from '../peer/peerReducerEnhancer';
+import {ignorePeerActions, peerMetadataEnhancer, peerReplicateActionEnhancer} from '../peer/peerActionEnhancers';
 
 const store = createStore(
-  reducers,
+  peerReducerEnhancer()(reducers),
   {
     value: 0,
-    peer: {},
+    peer: {peer: {}},
   },
   compose(
     applyMiddleware(
       thunk,
       actionEnhancerMiddleware({
-        filter: ({type = ''}) => type.indexOf('@@PEER') !== 0,
-        enhancer: (store, action) => {
-          console.log('1', action)
-          const {peer} = store.getState();
-          if (action.peerId) return action;
-          return {
-            ...action,
-            peerId: peer.id,
-            ts: Date.now(),
-          };
-        },
+        filter: ignorePeerActions,
+        enhancer: peerReplicateActionEnhancer(),
       }),
       actionEnhancerMiddleware({
-        filter: ({type = ''}) => type.indexOf('@@PEER') !== 0,
-        enhancer: (store, action) => {
-          console.log('2', JSON.stringify(action))
-          const {peer} = store.getState();
-          if (peer.id === action.peerId) {
-            store.dispatch({
-              type: '@@PEER_SEND_MESSAGE',
-              message: action,
-            });
-          }
-          return action;
-        },
-      })),
+        filter: ignorePeerActions,
+        enhancer: peerMetadataEnhancer(),
+      })
+    ),
     typeof window === 'object' &&
     typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f,
   )
@@ -53,7 +37,7 @@ const store = createStore(
 render(
   <Provider store={store}>
     <div>
-      <PeerContainer />
+      <PeerContainer key="peer"/>
       <CounterContainer />
     </div>
   </Provider>
