@@ -2,24 +2,22 @@ import uuid from 'lodash-uuid';
 
 export const ignorePeerActions = ({type = ''}) => type.indexOf('@@PEER') !== 0;
 
-export const peerMetadataEnhancer = (key = 'peer') => (getState, dispatch, action) => {
+export const peerMetadataEnhancer = (dispatch, getState, action) => {
   if (action.peerId) {
     return action;
   }
-  const state = getState();
-  const {peer = {}} = state[key];
+  const {peer: _peer} = getState();
   return {
     ...action,
     id: uuid(),
     ts: Date.now(),
-    peerId: peer.id,
+    peerId: _peer.id,
   };
 };
 
-export const peerReplicateActionEnhancer = (key = 'peer') => (getState, dispatch, action) => {
-  const state = getState();
-  const {peer = {}} = state[key];
-  if (peer.id === action.peerId) {
+export const peerReplicateActionEnhancer = (dispatch, getState, action) => {
+  const {peer: _peer} = getState();
+  if (_peer.id === action.peerId) {
     dispatch({
       type: '@@PEER_SEND_MESSAGE',
       message: action,

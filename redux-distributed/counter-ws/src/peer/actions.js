@@ -7,8 +7,8 @@ export const initPeer = (peerOptions) => (dispatch, getState) => dispatch({
     (id) => dispatch({type: '@@PEER_OPEN', id}),
     (conn) => dispatch({type: '@@PEER_CONNECTION', conn}),
     (action) => {
-      let {peer: peer} = getState();
-      if (action.peerId === peer.id) {
+      const {peer: _peer} = getState();
+      if (action.peerId === _peer.id) {
         return;
       }
       dispatch({type: '@@PEER_DATA_RECEIVE', action});
@@ -19,15 +19,16 @@ export const initPeer = (peerOptions) => (dispatch, getState) => dispatch({
 });
 
 export const connectToPeer = (remotePeerId) => (dispatch, getState) => {
-  const {peer: peer} = getState();
+  const {peer} = getState();
+  console.log('STATE', getState(), '_PEER', peer._peer);
   dispatch({type: '@@PEER_CONNECTING', peer, remotePeerId});
   connect(
-    peer,
+    peer._peer,
     remotePeerId,
     (id) => dispatch({type: '@@PEER_OPEN', id}),
     (action) => {
-      let {peer: peer} = getState();
-      if (action.peerId === peer.id) {
+      const {peer} = getState();
+      if (action.peerId === peer._peer.id) {
         return;
       }
       dispatch({type: '@@PEER_DATA_RECEIVE', action});
@@ -38,6 +39,6 @@ export const connectToPeer = (remotePeerId) => (dispatch, getState) => {
 };
 
 export const sendMessage = (message) => (dispatch, getState) => {
-  const {peer: peer} = getState();
-  send(peer)(message);
+  const {peer} = getState();
+  send(peer._peer)(message);
 };

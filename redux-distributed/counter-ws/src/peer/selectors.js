@@ -1,21 +1,21 @@
 import {createSelector} from 'reselect';
 import uniq from 'lodash.uniq';
 
-export const selectPeer = (key = 'peer') => (state) => state[key] || {};
+export const selectPeer = (state) => state.peer || {};
 
-export const selectPeerId = (key = 'peer') => createSelector(
-  selectPeer(key),
-  (peerWrapper) => {
-    const {peer} = peerWrapper;
-    return peer.id ? peer.id : 'not connected';
+export const selectPeerId = createSelector(
+  selectPeer,
+  (peer) => {
+    const {_peer} = peer;
+    return _peer.id ? _peer.id : 'not connected';
   }
 );
 
-export const selectPeerConnections = (key = 'peer') => createSelector(
-  selectPeer(key),
-  (peerWrapper) => {
-    const {peer} = peerWrapper;
-    return peer.connections ? peer.connections : []
+export const selectPeerConnections = createSelector(
+  selectPeer,
+  (peer) => {
+    const {_peer} = peer;
+    return _peer.connections ? _peer.connections : []
   }
 );
 
@@ -23,8 +23,8 @@ export const selectPeerConnections = (key = 'peer') => createSelector(
 //
 // export const selectPeerConnections = (state) => state.peer ? state.peer.connections ? state.peer.connections : {} : {}
 
-export const selectConnectedPeerIds = (key = 'peer') => createSelector(
-  selectPeerConnections(key),
+export const selectConnectedPeerIds = createSelector(
+  selectPeerConnections,
   (connections) => uniq(Object.keys(connections))
 );
 

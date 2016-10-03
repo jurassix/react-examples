@@ -86,9 +86,11 @@ export async function connectToPeer(
   try {
     //add reconnect info here...
     //open is redudant
+    console.log('FK', peer, remotePeerId);
     await open(peer, onOpen, onError);
 
     if (peer.connections[remotePeerId] === undefined) {
+      console.log('FK1', peer, remotePeerId);
       const peerConn = peer.connect(remotePeerId, {serialization: 'json'});
       await open(peerConn, onOpen, onError);
       data(peerConn, onMessageRecieve);

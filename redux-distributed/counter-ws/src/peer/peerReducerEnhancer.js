@@ -18,32 +18,29 @@
 
 import {send} from './peerAPI';
 
-export const peerReducerEnhancer = (key = 'peer') => (rootReducer) =>
-  (state, action) => {
-    const nextState = {
-      ...rootReducer(state, action),
-    };
-    nextState[key] = reducePeer(state[key], action);
-    return nextState;
-  };
+export const peerReducerEnhancer = (rootReducer) =>
+  (state, action) => ({
+    ...rootReducer(state, action),
+    peer: reducePeer(state.peer, action),
+  });
 
-export const reducePeer = (peerWrapper, action) => {
-  const {peer} = peerWrapper;
+export const reducePeer = (peer, action) => {
+  const {_peer} = peer;
   if (action.type === '@@PEER_INIT') {
     console.log('reduced init', action.peer);
-    return {peer: action.peer};
+    return {_peer: action.peer};
   }
   if (action.type === '@@PEER_OPEN') {
-    console.log('reduced open', peer, action)
-    return {peer};
+    console.log('reduced open', _peer, action)
+    return {_peer};
   }
   if (action.type === '@@PEER_CONNECTION') {
     console.log('reduced connection')
-    return {peer};
+    return {_peer};
   }
   if (action.type === '@@PEER_CONNECTING') {
     console.log('reduced connecting')
-    return {peer};
+    // return {_peer};
   }
   if (action.type === '@@PEER_ERROR') {
     console.log('reduced error', action);
@@ -53,7 +50,7 @@ export const reducePeer = (peerWrapper, action) => {
   }
   if (action.type === '@@PEER_SEND_MESSAGE') {
     console.log('reduced send', action);
-    send(peer)(action.message);
+    send(_peer)(action.message);
   }
-  return peerWrapper;
+  return peer;
 }

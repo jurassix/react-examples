@@ -12,21 +12,21 @@ import {peerReducerEnhancer} from '../peer/peerReducerEnhancer';
 import {ignorePeerActions, peerMetadataEnhancer, peerReplicateActionEnhancer} from '../peer/peerActionEnhancers';
 
 const store = createStore(
-  peerReducerEnhancer()(reducers),
+  peerReducerEnhancer(reducers),
   {
     value: 0,
-    peer: {peer: {}},
+    peer: {_peer: {}},
   },
   compose(
     applyMiddleware(
       thunk,
       actionEnhancerMiddleware({
         filter: ignorePeerActions,
-        enhancer: peerReplicateActionEnhancer(),
+        enhancer: peerReplicateActionEnhancer,
       }),
       actionEnhancerMiddleware({
         filter: ignorePeerActions,
-        enhancer: peerMetadataEnhancer(),
+        enhancer: peerMetadataEnhancer,
       })
     ),
     typeof window === 'object' &&
@@ -37,7 +37,7 @@ const store = createStore(
 render(
   <Provider store={store}>
     <div>
-      <PeerContainer key="peer"/>
+      <PeerContainer />
       <CounterContainer />
     </div>
   </Provider>
