@@ -16,13 +16,14 @@
 }
 */
 
-import {send} from './peerAPI';
+import {send} from '../peer/peerAPI';
 
-export const peerReducerEnhancer = (rootReducer) =>
-  (state, action) => ({
+export default function peerReducerEnhancer(rootReducer) {
+  return (state, action) => ({
     ...rootReducer(state, action),
     peer: reducePeer(state.peer, action),
   });
+}
 
 export const reducePeer = (peer, action) => {
   const {_peer} = peer;

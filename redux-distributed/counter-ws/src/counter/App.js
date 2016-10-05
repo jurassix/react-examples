@@ -3,35 +3,19 @@ import {render} from 'react-dom';
 import {Provider, connect} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import compose from 'lodash/flowRight';
 import PeerContainer from '../peer/PeerContainer';
 import CounterContainer from './CounterContainer';
 import reducers from './reducers';
+import devToolsEnhancer from '../enhancers/devToolsEnhancer';
 import actionEnhancerMiddleware from '../enhancers/actionEnhancerMiddleware';
-import {peerReducerEnhancer} from '../peer/peerReducerEnhancer';
-import {ignorePeerActions, peerMetadataEnhancer, peerReplicateActionEnhancer} from '../peer/peerActionEnhancers';
+import peerReducerEnhancer from '../enhancers/peerReducerEnhancer';
+import {ignorePeerActions, peerMetadataEnhancer, peerReplicateActionEnhancer} from '../enhancers/peerActionEnhancers';
+import peerStoreEnhancer from '../enhancers/peerStoreEnhancer';
 
 const store = createStore(
-  peerReducerEnhancer(reducers),
-  {
-    value: 0,
-    peer: {_peer: {}},
-  },
-  compose(
-    applyMiddleware(
-      thunk,
-      actionEnhancerMiddleware({
-        filter: ignorePeerActions,
-        enhancer: peerReplicateActionEnhancer,
-      }),
-      actionEnhancerMiddleware({
-        filter: ignorePeerActions,
-        enhancer: peerMetadataEnhancer,
-      })
-    ),
-    typeof window === 'object' &&
-    typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f,
-  )
+  reducers,
+  {value: 0},
+  peerStoreEnhancer(thunk)
 );
 
 render(

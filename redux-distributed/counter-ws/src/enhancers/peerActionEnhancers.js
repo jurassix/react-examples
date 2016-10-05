@@ -1,4 +1,4 @@
-import uuid from 'lodash-uuid';
+import uuid from 'node-uuid';
 
 export const ignorePeerActions = ({type = ''}) => type.indexOf('@@PEER') !== 0;
 
@@ -9,7 +9,7 @@ export const peerMetadataEnhancer = (dispatch, getState, action) => {
   const {peer: _peer} = getState();
   return {
     ...action,
-    id: uuid(),
+    id: uuid.v4(),
     ts: Date.now(),
     peerId: _peer.id,
   };

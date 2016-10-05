@@ -1,5 +1,5 @@
 import {createSelector} from 'reselect';
-import uniq from 'lodash.uniq';
+import uniq from 'lodash/uniq';
 
 export const selectPeer = (state) => state.peer || {};
 

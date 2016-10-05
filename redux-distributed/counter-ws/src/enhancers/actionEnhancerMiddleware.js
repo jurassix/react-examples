@@ -38,7 +38,7 @@ const actionEnhancerMiddleware = options => {
   return store => next => action => {
     if (isSimpleAction(action) && filter(action)) {
       // enhance action
-      const {getStore, dispatch} = store;
+      const {dispatch, getState} = store;
       return next(enhancer(dispatch, getState, action));
     }
     // default case
