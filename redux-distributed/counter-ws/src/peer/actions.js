@@ -7,8 +7,8 @@ export const initPeer = (peerOptions) => (dispatch, getState) => dispatch({
     (id) => dispatch({type: '@@PEER_OPEN', id}),
     (conn) => dispatch({type: '@@PEER_CONNECTION', conn}),
     (action) => {
-      const {peer: _peer} = getState();
-      if (action.peerId === _peer.id) {
+      const {peer} = getState();
+      if (action.peerId === peer._peer.id) {
         return;
       }
       dispatch({type: '@@PEER_DATA_RECEIVE', action});

@@ -6,18 +6,18 @@ export const peerMetadataEnhancer = (dispatch, getState, action) => {
   if (action.peerId) {
     return action;
   }
-  const {peer: _peer} = getState();
+  const {peer} = getState();
   return {
     ...action,
     id: uuid.v4(),
     ts: Date.now(),
-    peerId: _peer.id,
+    peerId: peer._peer.id,
   };
 };
 
 export const peerReplicateActionEnhancer = (dispatch, getState, action) => {
-  const {peer: _peer} = getState();
-  if (_peer.id === action.peerId) {
+  const {peer} = getState();
+  if (peer._peer.id === action.peerId) {
     dispatch({
       type: '@@PEER_SEND_MESSAGE',
       message: action,
