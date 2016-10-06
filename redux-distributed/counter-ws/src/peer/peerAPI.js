@@ -23,30 +23,23 @@ export const send = (peer) => (data) => {
   Object.keys(peer.connections)
     .forEach((peerId) => {
       peer.connections[peerId].map(conn => {
-        console.log('sending', peerId, data);
-        conn.send(data);
+        if (conn.open) {
+          console.log('sending', peerId, data);
+          conn.send(data);
+        } else {
+          console.log('cannot send, conn not open', conn);
+        }
       });
     });
 }
 
-function open(peer, onOpen = noop, onError = noop) {
-  return new Promise((resolve, reject) => {
-    try {
-      if (peer.open) {
-        return resolve(peer.id);
-      }
-      peer.on('open', (id) => {
-        onOpen(id);
-        resolve(id);
-      });
-    } catch (err) {
-      onError(err);
-      reject(err);
-    }
-  });
+function open(peer, onOpen = noop) {
+  if (!peer.open) {
+    peer.on('open', onOpen);
+  }
 }
 
-function connection(peer, onConnection = noop, onError = noop) {
+function connection(peer, onConnection = noop) {
   peer.on('connection', onConnection);
 }
 
@@ -58,7 +51,7 @@ function error(peer, onError = noop) {
   peer.on('error', onError);
 }
 
-export async function connectToPeer(
+export function connectToPeer(
   peer,
   remotePeerId,
   onOpen = noop,
@@ -66,20 +59,19 @@ export async function connectToPeer(
   onError = noop,
 ) {
   try {
-    //add reconnect info here...
-    //open is redudant
-    console.log('ensure peer is open open...', peer.id, remotePeerId);
-    await open(peer, onOpen, onError);
-
     if (peer.connections[remotePeerId] === undefined) {
       console.log('connecting', peer.id, remotePeerId);
       const peerConn = peer.connect(remotePeerId, {serialization: 'json'});
 
-      console.log('opening', peer.id, remotePeerId);
-      await open(peerConn, onOpen, onError);
+      console.log('on error', peer.id, remotePeerId);
+      error(peerConn, onError);
 
-      console.log('dataing', peer.id, remotePeerId);
-      data(peerConn, onMessageRecieve);
+      console.log('on open', peer.id, remotePeerId);
+      open(peerConn, (id) => {
+        onOpen(id);
+        console.log('on data', peer.id, remotePeerId);
+        data(peerConn, onMessageRecieve);
+      });
     } else {
       console.error(`Already connected to remote peer id = ${remotePeerId}`);
     }

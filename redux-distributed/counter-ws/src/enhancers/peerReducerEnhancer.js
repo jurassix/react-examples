@@ -32,15 +32,15 @@ export const reducePeer = (peer, action) => {
   }
   if (action.type === '@@PEER_OPEN') {
     console.log('reduced open', peer, action)
-    return {...peer};
+    // return {...peer};
   }
   if (action.type === '@@PEER_CONNECTION') {
     console.log('reduced connection')
-    return {...peer};
+    // return {...peer};
   }
   if (action.type === '@@PEER_CONNECTING') {
     console.log('reduced connecting')
-    return {...peer};
+    // return {...peer};
   }
   if (action.type === '@@PEER_ERROR') {
     console.log('reduced error', action);
@@ -50,7 +50,6 @@ export const reducePeer = (peer, action) => {
   }
   if (action.type === '@@PEER_SEND_MESSAGE') {
     console.log('reduced send', action);
-    send(peer.__peer)(action.message);
   }
   return peer;
 }

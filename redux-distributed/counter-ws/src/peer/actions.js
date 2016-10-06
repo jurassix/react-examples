@@ -24,7 +24,7 @@ export const connectToPeer = (remotePeerId) => (dispatch, getState) => {
   const {peer} = getState();
   dispatch({type: '@@PEER_CONNECTING', peer, remotePeerId});
   connect(
-    peer.__peer,
+    peer,
     remotePeerId,
     (id) => dispatch({type: '@@PEER_OPEN', id}),
     (action) => {
