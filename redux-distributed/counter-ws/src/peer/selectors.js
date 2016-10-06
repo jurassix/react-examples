@@ -5,15 +5,10 @@ export const selectPeer = (state) => state.peer || {};
 
 export const selectPeerId = createSelector(
   selectPeer,
-  (peer) => peer.id ? peer.id : 'not connected'
-);
-
-export const selectPeerConnections = createSelector(
-  selectPeer,
-  (peer) => peer.connections ? peer.connections : []
+  (peer) => peer.id || 'not connected'
 );
 
 export const selectConnectedPeerIds = createSelector(
-  selectPeerConnections,
-  (connections) => uniq(Object.keys(connections))
+  selectPeer,
+  (peer) => uniq(Object.keys(peer.connections || {}))
 );
