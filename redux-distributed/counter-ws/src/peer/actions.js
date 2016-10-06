@@ -8,7 +8,6 @@ export const initPeer = (peerOptions) => (dispatch, getState) => dispatch({
     (id) => dispatch({type: '@@PEER_OPEN', id}),
     (conn) => dispatch({type: '@@PEER_CONNECTION', conn}),
     (action) => {
-      dispatch({type: '@@PEER_ON_MESSAGE_RECEIVE', action});
       const {peer} = getState();
       if (action.peerId === peer.id) {
         return;
@@ -28,7 +27,6 @@ export const connectToPeer = (remotePeerId) => (dispatch, getState) => {
     remotePeerId,
     (id) => dispatch({type: '@@PEER_OPEN', id}),
     (action) => {
-      dispatch({type: '@@PEER_ON_MESSAGE_RECEIVE', action});
       const {peer} = getState();
       if (action.peerId === peer.id) {
         return;
