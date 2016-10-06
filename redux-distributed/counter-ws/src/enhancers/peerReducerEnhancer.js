@@ -26,22 +26,21 @@ export default function peerReducerEnhancer(rootReducer) {
 }
 
 export const reducePeer = (peer, action) => {
-  const {_peer} = peer;
   if (action.type === '@@PEER_INIT') {
     console.log('reduced init', action.peer);
-    return {_peer: action.peer};
+    return action.peer;
   }
   if (action.type === '@@PEER_OPEN') {
-    console.log('reduced open', _peer, action)
-    return {_peer};
+    console.log('reduced open', peer, action)
+    return {...peer};
   }
   if (action.type === '@@PEER_CONNECTION') {
     console.log('reduced connection')
-    return {_peer};
+    return {...peer};
   }
   if (action.type === '@@PEER_CONNECTING') {
     console.log('reduced connecting')
-    // return {_peer};
+    return {...peer};
   }
   if (action.type === '@@PEER_ERROR') {
     console.log('reduced error', action);
@@ -51,7 +50,7 @@ export const reducePeer = (peer, action) => {
   }
   if (action.type === '@@PEER_SEND_MESSAGE') {
     console.log('reduced send', action);
-    send(_peer)(action.message);
+    send(peer.__peer)(action.message);
   }
   return peer;
 }

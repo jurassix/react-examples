@@ -12,11 +12,11 @@ export default function peerStoreEnhancer() {
       applyMiddleware(
         actionEnhancerMiddleware({
           filter: ignorePeerActions,
-          enhancer: peerReplicateActionEnhancer,
+          enhancer: peerMetadataEnhancer,
         }),
         actionEnhancerMiddleware({
           filter: ignorePeerActions,
-          enhancer: peerMetadataEnhancer,
+          enhancer: peerReplicateActionEnhancer,
         })
       );
 
