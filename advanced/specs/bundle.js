@@ -1,4 +1,4 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw (f.code="MODULE_NOT_FOUND", f)}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var Immutable = require('immutable');
 
 var Benchmark = require('benchmark');
@@ -26203,7 +26203,7 @@ goog.module.declareLegacyNamespace = function() {
 };
 goog.setTestOnly = function(a) {
   if (COMPILED && !goog.DEBUG) {
-    throw a = a || "", Error("Importing test-only code into non-debug environment" + (a ? ": " + a : "."));
+    throw (a = a || "", Error("Importing test-only code into non-debug environment" + (a ? ": " + a : ".")));
   }
 };
 goog.forwardDeclare = function(a) {
@@ -26414,7 +26414,7 @@ goog.DEPENDENCIES_ENABLED && (goog.included_ = {}, goog.dependencies_ = {pathIsM
     if (e = b[f]) {
       d.pathIsModule[e] ? goog.importModule_(goog.basePath + e) : goog.importScript_(goog.basePath + e);
     } else {
-      throw goog.moduleLoaderState_ = g, Error("Undefined script input");
+      throw (goog.moduleLoaderState_ = g, Error("Undefined script input"));
     }
   }
   goog.moduleLoaderState_ = g;
@@ -29643,7 +29643,7 @@ com.cognitect.transit.impl.writer.marshal = function(a, b, c, d) {
         return com.cognitect.transit.impl.writer.emitEncoded(a, e, f, g, b, c, d);
     }
   } else {
-    throw a = com.cognitect.transit.handlers.constructor(b).name, c = Error("Cannot write " + a), c.data = {obj:b, type:a}, c;
+    throw (a = com.cognitect.transit.handlers.constructor(b).name, c = Error("Cannot write " + a), c.data = {obj:b, type:a}, c);
   }
 };
 com.cognitect.transit.impl.writer.maybeQuoted = function(a, b) {
