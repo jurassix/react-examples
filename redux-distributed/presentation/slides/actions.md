@@ -1,18 +1,19 @@
 ### actions
 
-Actions are messages that describe what your application is doing, and allow data to be sent through the system.
+Actions describe what is happening in your application, and allow data to be
+introduced into the system.
 
-Actions are serializable. Plain Objects.
+ - Actions are _functions_ that return _serializable_ JSON objects.
+ - Actions should follow the convention of having a `type` field that _describes_
+the users intent.
 
 Example:
 
 ```js
-const newUserAction = (user) => ({type: 'NEW_USER', user});
+const newUserAction = (user) => ({ type: 'NEW_USER', user });
 ```
 
-You can freely dispatch multiple additional actions from inside an action; these are known as __Action Creators.__
-
-_Dispatched_ Actions pass through all __middleware__ then through all reducers.
+You can freely dispatch many _actions_ from inside an action; these are known as __Action Creators.__
 
 ```js
 const saveUserAction = (userId) = async (store, action) => {
@@ -32,3 +33,5 @@ const saveUserAction = (userId) = async (store, action) => {
   }
 };
 ```
+
+_Dispatched_ Actions pass through all __middleware__ then through all reducers.

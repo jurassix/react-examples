@@ -1,37 +1,62 @@
-### Selectors via Reselect
+### Selectors _via Reselect_
 
 https://github.com/reactjs/reselect
 
-Selectors provide React Components memoized access to state. The more fine grained you make your selectors the better your performance can be.
+Selectors are a key abstraction in Redux.
 
-Selectors allow us to shape our state into exactly what our Components need. All transforming is done upfront, as simple easily tested functions.
+The Reselected state structure matches your __Presentational Layer.__
 
-Example:
+Selectors are _memoized_ functions.
 
-#### Selectors compose together for performance
+ - Memoized simply means return a cached result for know inputs to a function: `f(x) = y`.
+ - A simple hash map data structure can be introduced to remember previous parameters and simply return the previous computed result.
 
-Redux _connects_ components to actions and state. If the state reference has changed the connected componenet will render. Connected Components are called __Containers.__
+Selectors provide React Components memoized access to state.
+
+ - The more fine grained you make your selectors the better your performance can be.
+ - Selectors allow us to shape our state into exactly what our Components need.
+ - All transforming is done upfront, as simple easily tested functions.
+
+
+_Selectors compose together for performance._
+
+ - Redux _connects_ components to actions and state.
+ - If the state reference has changed the connected componenet will render.
+ - Connected Components are called __Containers.__
+
+#### Example
 
 ```js
+const selectSystemRoles = (state) => state.auth.roles || [];
+const selectSystemPermissions = (state) => state.auth.permissions || [];
 const selectUsers = (state) => state.users || [];
-const selectCompanies = (state) => state.companies || [];
-
-const selectUsersWithCompanies = createSelector(
+const selectActiveUserId = (state) => state.activeUserId;
+const selectActiveUser = createSelector(
   selectUsers,
-  selectCompanies,
-  (users, companies) => {
-    users.map((user) => {
-      const company = companies.find((company) => company.id === user.companyId);
-      return {
-        ...user,
-        company,
-      };
-    });
-  }
+  selectActiveUserId,
+  (users, userId) => users.find((user) => user.id === userId) || {}
+);
+const selectActiveUserRoleIds = createSelector(
+  selectActiveUser,
+  (user) => user.roleIds
+);
+const selectActiveUserPermissionIds = createSelector(
+  selectActiveUser,
+  (user) => user.permissionIds
+);
+const selectActiveUserRoles = createSelector(
+  selectSystemRoles,
+  selectActiveUserRoleIds,
+  (roles, userRoleIds) =>
+    roles.filter((role) => userRoleIds.indexOf(role.id) !== -1)
+);
+const selectActiveUserPermissions = createSelector(
+  selectSystemPermissions,
+  selectActiveUserPermissionsIds,
+  (permissions, userPermissionIds) =>
+    permissions.filter((perm) => userPermissionIds.indexOf(perm.id) !== -1)
 );
 ```
-
-Example:
 
 #### State
 
@@ -83,21 +108,21 @@ const User = ({user}) => (
 );
 ```
 
-This is a straw man example. But in my experience it's very representative of actual code you would right or review.
+__What's the problem here?__
 
-What's the problem here?
+Our state is simple, our selector is simple, however, our component is forced to handle the business logic of transforming data into it's __presentational form__.
 
-Our state is simple, our selector is simple, however, our component is forced to handle the business logic of transforming data into it's presentational form.
+_We need to think about data in it's Presentational form._
 
-This last part is critical... _Think about data in it's Presentational form._ You should try to make your Components should be the dumbest part of application.
+You should try to make your Components should be the _dumbest_ part of the application.
 
 #### Single Responsibility Principal
 
-Components should be functions of their properties and nothing more.
-
-Selectors are responsible for transforming state into presentational forms.
-
-Establishing good patterns is crucial to efficient code reviews. If the reviewer knows where to expect the Business Logic to be but sees somewhere else, a natural conversation happens.
+ - Components should be functions of their properties and nothing more.
+  - `f(x) = y`
+ - Selectors are responsible for transforming state into presentational forms.
+ - Establishing good patterns is crucial to efficient code reviews.
+  - If the reviewer knows where to expect the Business Logic to be but sees somewhere else, a natural conversation happens.
 
 ### Refactor
 
